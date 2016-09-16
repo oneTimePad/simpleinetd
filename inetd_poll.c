@@ -1,6 +1,6 @@
 #include "inetd_poll.h"
 #include <sys/sockets.h>
-#include <poll.h>
+#include <errno.h>
 
 
 
@@ -12,6 +12,10 @@
  * returns status
  * */
 bool pollInit(struct pollfd *poll_str, service_type *serv){
+	if(poll_str == NULL || serv == NULL){
+		errno = EINVAL
+		return FALSE;
+	}
 
 	socklen_t addrlen;
 	int fd;
@@ -43,15 +47,57 @@ bool pollInit(struct pollfd *poll_str, service_type *serv){
  * returns: status
  * */
 bool pollAccept(struct service_type *serv,int sock){
+
+
+
+
+}
+
+
+static bool pollFind(struct pollfd *poll_strs, nfds_t nfds,struct pollstate_type *ps){
+
+
+	int i =0;
+	for(;i< nfds; i++){
+		if(poll_strs[i].revents == POLLIN){
+			polls_strs[i].revents =0;
+			ps->num_accepted--;
+			ps->current_index = i;
+			return TRUE;
+		}
+
+	}
+	return FALSE;
 }
 
 /**
  * polls on poll_strs
  * poll_str: list of fd to poll on
- * poll_index: returns accepted fd 
+ * num_accepted: number of sockets accepted upon last poll
  * returns: status
  * */
-bool pollStart(struct pollfd *poll_strs,int *poll_index){
+bool pollStart(struct pollfd *poll_strs,nfds_t nfds,struct pollstate_type* ps){
+
+	if(poll_str == NULL || ps == NULL || nfds <= 0){
+		errno = EINVAL;
+		return FALSE;
+	}
+
+	#define DFT_TIMEOUT 2000
+	if(ps->num_accept>0){
+		if(!pollFind(poll,nfds,ps))
+			return FALSE;
+		return TRUE;
+	}
+	int ret;	
+	while((ret=poll(poll_strs,nfds,DFT_TIMEOUT))==0);
+	if(ret == -1)
+		return FALSE;
+	else{
+		if(!pollFind(poll,nfds,ps))
+			return FALSE;
+		return TRUE;
+	}
 
 
 
