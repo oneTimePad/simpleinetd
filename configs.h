@@ -28,6 +28,7 @@ struct service_type{
 	char serv_prog[MAX_SERV_NAME+1];
 	char serv_args[MAX_SERV_ARGS][ARG_MAX];
 	int num_args;
+
 };
 		
 bool readConfigInit(char *, struct rl_type *);
