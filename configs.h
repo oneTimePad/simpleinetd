@@ -15,7 +15,7 @@
 #define MAX_SERV_TYPE 10
 
 #define LINE_SIZE     4096
-#define INIT_SERVER_ARRAY_SIZE 32
+#define INIT_SERVICE_ARRAY_SIZE 32
 #define INIT_ARRAY_SMALL_INC   16
 typedef enum {SOCK_TCP, SOCK_UDP} protocol;
 typedef enum {INVALID,NOWAIT, WAIT} inet_flags;
