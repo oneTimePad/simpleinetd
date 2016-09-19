@@ -12,7 +12,7 @@ struct pollstate_type{
 };
 
 bool pollInit(struct pollfd *,struct service_type *);
-bool pollAcept(struct service_type *);
+bool pollAccept(struct service_type *,int);
 bool pollStart(struct pollfd *poll_strs,nfds_t, struct pollstate_type *);
 
 

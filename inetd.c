@@ -59,6 +59,25 @@ int main(int argc,char *argv[]){
 	struct service_type *servs = NULL;
 	size_t num_servs;
 	readConfigServ(CONFIG_FILE,&servs,&num_servs);
+	
+	struct pollfd poll_servs[num_servs];
+	memset(poll_servs,0,num_servs*sizeof(struct pollfd));
+
+	int index = 0;
+	for(; index < num_servs; index++){
+		if(!pollInit(&poll_servs[index],&servs[index]))
+				errnoExit("pollInit");
+	}
+	struct pollstate_type ps;
+	while(!pollStart(poll_servs,num_servs,&ps)){
+		
+		if(!pollAccept(&servs[ps.current_index],poll_servs[ps.current_index].fd))
+			errnoExit("pollAccept");
+
+	}
+	errnoExit("pollStart");
+	exit(EXIT_SUCCESS);
+
 }
 
 
