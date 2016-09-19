@@ -144,4 +144,7 @@ bool readConfig(struct rl_type *rl,struct service_type *servs,size_t num_servs,i
 
 }
 
+bool readConfigClean(struct rl_type *rl_p){
+	return readLineClean(rl_p);
+}
 

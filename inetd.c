@@ -9,7 +9,7 @@
 #include <syslog.h>
 #include <signal.h>
 
-void readConfigServ(char *config_file, struct service_type **servs, size_t *num_servs){
+static void readConfigServ(char *config_file, struct service_type **servs, size_t *num_servs){
 	if(servs == NULL || num_servs == NULL){
 		errno = EINVAL;
 		errnoExit("readConfigServ");
@@ -31,7 +31,46 @@ void readConfigServ(char *config_file, struct service_type **servs, size_t *num_
 	*num_servs = start_serv;
 	*servs = local_servs;
 
+	if(!readConfigClean(&rl))
+		errnoExit("readConfigClean");
+
 }
+
+static void stopAndCleanServ(void *servs){
+	//closes config and cleans up services
+	/
+}
+
+
+static void readAndRunServ(void){
+	struct service_type *servs = NULL;
+	size_t num_servs;
+	readConfigServ(CONFIG_FILE,&servs,&num_servs);
+	
+	struct pollfd poll_servs[num_servs];
+	memset(poll_servs,0,num_servs*sizeof(struct pollfd));
+
+	int index = 0;
+	for(; index < num_servs; index++){
+		if(!pollInit(&poll_servs[index],&servs[index]))
+				errnoExit("pollInit");
+	}
+	struct pollstate_type ps;
+	while(!pollStart(poll_servs,num_servs,&ps)){
+		if(!pollAccept(&servs[ps.current_index],poll_servs[ps.current_index].fd)){
+			if(errno = EINTR && hup_received)
+				return;
+			errnoExit("pollAccept");
+		}
+
+	}
+	if(errno = EINTR && hup_recieved)
+		return;
+	errnoExit("pollStart");
+
+}
+
+
 
 volatile sig_atomic_t hup_received = 0;
 void hup_handler(int sig){
@@ -56,26 +95,7 @@ int main(int argc,char *argv[]){
 		errExit("daemonize");
 
 	openlog(LOG_IDENF,0,LOG_USER);
-	struct service_type *servs = NULL;
-	size_t num_servs;
-	readConfigServ(CONFIG_FILE,&servs,&num_servs);
-	
-	struct pollfd poll_servs[num_servs];
-	memset(poll_servs,0,num_servs*sizeof(struct pollfd));
-
-	int index = 0;
-	for(; index < num_servs; index++){
-		if(!pollInit(&poll_servs[index],&servs[index]))
-				errnoExit("pollInit");
-	}
-	struct pollstate_type ps;
-	while(!pollStart(poll_servs,num_servs,&ps)){
-		
-		if(!pollAccept(&servs[ps.current_index],poll_servs[ps.current_index].fd))
-			errnoExit("pollAccept");
-
-	}
-	errnoExit("pollStart");
+	readAndRun();
 	exit(EXIT_SUCCESS);
 
 }

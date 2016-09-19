@@ -18,5 +18,5 @@ struct rl_type {
 
 bool readLineBufInit(int,struct rl_type *);
 ssize_t readLineBuf(struct rl_type *, char *, size_t);
-
+bool readLineClean(struct rl_type *);
 #endif

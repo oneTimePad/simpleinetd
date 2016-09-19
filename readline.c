@@ -61,4 +61,16 @@ ssize_t readLineBuf(struct rl_type *rl_p,char *line, size_t line_size){
 	return count;
 }
 
+bool readLineClean(struct rl_type *rl_p){
+	if(rl == NULL){
+		errno = EINVAL;
+		return FALSE;
+	}
 
+	if(close(rl_p->rl_fd_i) == -1)
+		return FALSE;
+	return TRUE;
+
+
+
+}

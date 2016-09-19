@@ -33,4 +33,5 @@ struct service_type{
 		
 bool readConfigInit(char *, struct rl_type *);
 bool readConfig(struct rl_type *,struct service_type *,size_t,int*);
+bool readConfigClean(struct rl_type *);
 #endif
