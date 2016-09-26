@@ -22,12 +22,12 @@ int daemonize( int flags){
 		default: _exit(EXIT_SUCCESS); break;
 	}	
 	
-	if(!(flags & DZ_NO_UMASK0))
+	if((flags & DZ_NO_UMASK0))
 		umask(0);
-	if(!(flags & DZ_NO_CHDIR))
+	if((flags & DZ_NO_CHDIR))
 		chdir("/");
 
-	if(!(flags & DZ_NO_CLOSE_FILES)){
+	if((flags & DZ_NO_CLOSE_FILES)){
 		maxfd = sysconf(_SC_OPEN_MAX);
 		if(maxfd == -1)
 			maxfd = DZ_MAX_CLOSE;
@@ -36,7 +36,7 @@ int daemonize( int flags){
 
 	}
 
-	if(!(flags & DZ_NO_REOPEN_STD_FDS)){
+	if((flags & DZ_NO_REOPEN_STD_FDS)){
 		if(close(STDIN_FILENO) == -1)
 			return -1;
 

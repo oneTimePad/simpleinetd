@@ -58,16 +58,32 @@ static void readAndRunServ(void){
 	struct pollstate_type ps;
 	while(pollStart(poll_servs,num_servs,&ps)){
 		if(!pollAccept(&servs[ps.current_index],poll_servs[ps.current_index].fd)){
-			if(errno = EINTR && (hup_received ||term_received))
-				return;
 			free(servs);
+			index =0;
+				for(;index< num_servs;index++){
+					if(close(poll_servs[index].fd) == -1)
+						errnoExit("close");
+				}
+
+			if(errno = EINTR && (hup_received || term_received)){
+				return;
+			}
+				
 			errnoExit("pollAccept");
 		}
 
 	}
-	if(errno = EINTR && (hup_received || term_received))
-		return;
 	free(servs);
+	index =0;
+	for(;index< num_servs;index++){
+		if(close(poll_servs[index].fd) == -1)
+			errnoExit("close");
+	}
+
+	if(errno = EINTR && (hup_received || term_received)){
+		return;
+	}
+
 	errnoExit("pollStart");
 
 }
