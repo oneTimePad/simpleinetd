@@ -86,7 +86,6 @@ inetPassiveSocket(const char *service, int type, socklen_t *addrlen, bool doList
 				return -1;
 			}
 		}
-
 		if(bind(sfd, rp -> ai_addr, rp -> ai_addrlen) == 0)
 			break;
 		if(close(sfd) == -1)

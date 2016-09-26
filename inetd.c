@@ -101,10 +101,10 @@ int main(int argc,char *argv[]){
 		errnoExit("sigaction");
 
 
-	if(daemonize(0) == -1)
-		errExit("daemonize");
+//	if(daemonize(0) == -1)
+//		errExit("daemonize");
 
-	openlog(LOG_IDENF,0,LOG_USER);
+//	openlog(LOG_IDENF,0,LOG_USER);
 	while(TRUE){
 		readAndRunServ();
 		if(term_received)
