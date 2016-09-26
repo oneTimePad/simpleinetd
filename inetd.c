@@ -56,7 +56,7 @@ static void readAndRunServ(void){
 				errnoExit("pollInit");
 	}
 	struct pollstate_type ps;
-	while(!pollStart(poll_servs,num_servs,&ps)){
+	while(pollStart(poll_servs,num_servs,&ps)){
 		if(!pollAccept(&servs[ps.current_index],poll_servs[ps.current_index].fd)){
 			if(errno = EINTR && (hup_received ||term_received))
 				return;

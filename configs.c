@@ -19,7 +19,7 @@ static bool parseConfig(char *line, struct service_type *serv){
 		
    			line++;
    		}
-   		else{
+   		else if(*line!='\0'){
    			switch(order++){
    				case 0:{
    					if(line-start+1 >MAX_SERV_NAME)
@@ -71,7 +71,7 @@ static bool parseConfig(char *line, struct service_type *serv){
    					break;
    				}
    				default:{
-   					if(line-start+1 >ARG_MAX)
+   					if((long)line-(long)start+1 >ARG_MAX)
    						return FALSE;
    					if(serv->num_args +1 > MAX_SERV_ARGS)
    						return FALSE;
@@ -86,6 +86,9 @@ static bool parseConfig(char *line, struct service_type *serv){
    			start =NULL;
 			line++;
    		}
+
+		if(*line == '\0')
+			break;
    
    	}
    	return TRUE;
