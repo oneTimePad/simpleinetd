@@ -19,17 +19,24 @@ static bool parseConfig(char *line, struct service_type *serv){
 		
    			line++;
    		}
-   		else if(*line!='\0'){
+   		else{
+			if(start == NULL && *line!='\0'){
+				line++;
+				continue;
+			}
+			else if(start == NULL && *line=='\0'){
+				break;
+			}
    			switch(order++){
    				case 0:{
-   					if(line-start+1 >MAX_SERV_NAME)
+   					if(line-start >MAX_SERV_NAME)
    						return FALSE;
    					strncpy(serv->serv_name,start,line-start);
    					serv->serv_name[line-start] = '\0';
    					break;
    				}
 				case 1:{
-					if(line-start+1 >  MAX_SERV_TYPE)
+					if(line-start >  MAX_SERV_TYPE)
    						return FALSE;
    					char tmp_type[MAX_SERV_TYPE+1];
    					strncpy(tmp_type,start,line-start);
@@ -41,7 +48,7 @@ static bool parseConfig(char *line, struct service_type *serv){
 				       }
    				case 2:{
 
-					if(line-start+1 >  MAX_SERV_PROT)
+					if(line-start >  MAX_SERV_PROT)
    						return FALSE;
    					char tmp_prot[MAX_SERV_PROT+1];
    					strncpy(tmp_prot,start,line-start);
@@ -53,7 +60,7 @@ static bool parseConfig(char *line, struct service_type *serv){
 				       
 				}
    				case 3:{
-   					if(line-start+1 >MAX_SERV_FLAG)
+   					if(line-start >MAX_SERV_FLAG)
    						return FALSE;
    					char tmp_flag[MAX_SERV_FLAG+1];
    					strncpy(tmp_flag,start,line-start);
@@ -64,14 +71,14 @@ static bool parseConfig(char *line, struct service_type *serv){
    					break;
    				}
    				case 4:{
-   					if(line-start+1 > MAX_SERV_NAME)
+   					if(line-start > MAX_SERV_NAME)
    						return FALSE;
    					strncpy(serv->serv_prog,start, line-start);
    					serv->serv_prog[line-start] = '\0';
    					break;
    				}
    				default:{
-   					if((long)line-(long)start+1 >ARG_MAX)
+   					if((long)line-(long)start >ARG_MAX)
    						return FALSE;
    					if(serv->num_args +1 > MAX_SERV_ARGS)
    						return FALSE;
@@ -87,8 +94,6 @@ static bool parseConfig(char *line, struct service_type *serv){
 			line++;
    		}
 
-		if(*line == '\0')
-			break;
    
    	}
    	return TRUE;
